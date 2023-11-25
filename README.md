@@ -13,7 +13,7 @@ https://git-scm.com/downloads
 After completing the git download, you should be able to open your terminal and verify by typing:
 ```bash
 git --version
->>> 2.42.0 (any version number means it was successful)
+$ 2.42.0 (any version number means it was successful)
 ```
 
 Make sure you have Python3 installed on your computer.
@@ -25,15 +25,21 @@ python3 --version
 
 Using homebrew to download Git and Python:
 Open your terminal and type the following commands one at a time, hitting enter after each one.
+
 ```bash
 brew install git
+```
+```bash
 brew install python
 ```
 
 Once you have git and python installed. In your home directory in your terminal type the following commands one at a 
 time again:
+
 ```bash
 echo 'export PATH="$(brew --prefix python)/bin:$PATH"' >> ~/.bash_profile
+```
+```bash
 source ~/.bash_profile
 ```
 
@@ -61,13 +67,16 @@ Ensure that the main python script and the bash script in the repository are exe
 You can do so by typing the following in the project directory terminal:
 
 ```bash
-chmod +x main.py
-chmod +x get_coyote_data.sh 
+chmod +x main.py 
+```
+```bash
+chmod +x get_coyote_data.sh
 ```
 
 ## Running
 
-Open your terminal and navigate to the project directory, may look something like this:
+Open your terminal and navigate to the project directory, doing so may look something like this:
+
 ```bash
 cd Documents/coyotes/automation
 ```
@@ -75,12 +84,12 @@ cd Documents/coyotes/automation
 Download the observation form results from qualtrics as a csv. 
 Save the csv in whatever way you want, as long as it is in the current directory.
 An example could be:
->>> automation/data_pulls/2023/fall/raw.csv
+> automation/data_pulls/2023/fall/raw.csv
 
 Each name following the slashes (/) is a folder inside the automation directory.
 The csv file can also be named whatever you like. 
 For example:
->>> automation/data_pulls/2023/fall/november_24.csv
+> automation/data_pulls/2023/fall/november_24.csv
 
 Now without leaving the automation directory, type in the terminal this command:
 ```bash
