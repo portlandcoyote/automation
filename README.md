@@ -73,6 +73,27 @@ chmod +x main.py
 chmod +x get_coyote_data.sh
 ```
 
+## Updating the repository
+
+In the project directory in your terminal, first check if the current status of the git repository by typing:
+```bash
+git status
+```
+
+If there are changes from the origin, you can update the changes locally by typing:
+```bash
+git pull
+```
+
+You can verify the update by either typing:
+```bash
+git log
+```
+or by again typing:
+```bash
+git status
+```
+
 ## Running
 
 Open your terminal and navigate to the project directory, doing so may look something like this:
