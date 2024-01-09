@@ -46,7 +46,7 @@ def main():
     # Sort dataframe by recorded date
     df = df.sort_values(constants.RECORDED_DATE_COLUMN)
 
-    # Rejected.csv ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Rejected.csv ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     # Create masks to use to filter rows that should be rejected:
     mask_lat_long_reject = pd.isna(df[constants.LAT_LONG_COLUMN]) | (df[constants.LAT_LONG_COLUMN] == '')  # No lat long.
@@ -70,7 +70,7 @@ def main():
     df = df[df[constants.RESPONSE_TYPE_COLUMN] != constants.RESPONSE_REJECT]  # No survey previews.
     df = df[~mask_consent_reject]  # '~' is the logical NOT bitwise operator in this context. Always need consent.
 
-    # Check if master.csv exists ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Check if master.csv exists ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     if os.path.isfile(constants.MASTER_FILE_PATH):  # Update to master.csv
         master_df = pd.read_csv(constants.MASTER_FILE_PATH)
