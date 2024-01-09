@@ -22,10 +22,10 @@ source "$VENV_DIR/bin/activate"
 REQUIREMENTS="requirements.txt"
 if [ -f "$REQUIREMENTS" ]; then
     # Install requirements if not already satisfied
-    pip freeze > installed.txt
+    python3 -m pip freeze > installed.txt
     if ! diff -q "$REQUIREMENTS" installed.txt > /dev/null; then
         echo "Installing required Python packages..."
-        pip install -r "$REQUIREMENTS"
+        python3 -m pip install -r "$REQUIREMENTS"
     fi
     rm installed.txt
 else
@@ -43,10 +43,13 @@ fi
 
 # Check if the file path is valid
 if [ -f "$FILE_PATH" ]; then
-      python3 main.py "$FILE_PATH" 2>> "$ERROR_LOG" || log_error "Python script execution failed."
+      python3 main.py "$FILE_PATH" 2>> "$ERROR_LOG" || log_error "main.py script execution failed."
 else
     echo "File does not exist or is not a regular file."
     exit 1
 fi
+
+# Run Arc Gis Online Python script
+python3 arc_gis_online.py 2>> "$ERROR_LOG" || log_error "arc_gis_online.py script execution failed."
 
 deactivate
