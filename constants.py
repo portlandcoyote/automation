@@ -14,7 +14,7 @@ JSON_ROW_INDEX = 1
 UNSPECIFIED = 'Unspecified'
 MASTER_FILE_PATH = 'master.csv'
 QR_FILE_PATH = 'qualtrics_ref.csv'
-AGO_FILE_PATH = 'ago.csv'
+AGO_FILE_PATH = 'arc_gis_online.csv'
 REJECTED_FILE_PATH = 'rejected.csv'
 
 # Qualtrics Reference Desired layout
