@@ -9,6 +9,7 @@ import json
 from astral.sun import sun
 from astral import LocationInfo
 from datetime import datetime
+import copy
 
 import constants
 
@@ -42,6 +43,9 @@ def main():
         df = df.drop(constants.JSON_ROW_INDEX)
         df = df.reset_index(drop=True)
 
+    raw_df = copy.deepcopy(df)
+    raw_checksum = raw_df.shape[0]
+
     df = df.drop(0)  # Drop zuriel's headers preemptively.
     # Sort dataframe by recorded date
     df = df.sort_values(constants.RECORDED_DATE_COLUMN)
@@ -56,33 +60,16 @@ def main():
     # Combine the masks using UNION (bitwise logical OR)
     combined_mask = mask_lat_long_reject | mask_response_type_reject | mask_consent_reject
 
-    if os.path.isfile(constants.REJECTED_FILE_PATH):
-        rejected = pd.concat([pd.read_csv(constants.REJECTED_FILE_PATH), df[combined_mask]], ignore_index=True)
-    else:
-        # Create a dataframe for the CSV for rejected rows
-        rejected = df[combined_mask]
+    rejected = df[combined_mask]
 
-    # Export the rejected dataframe to a CSV file
-    rejected.to_csv('rejected.csv', index=False)
+    rejected_checksum = rejected.shape[0]
 
     # Drop those rejected rows from the dataframe.
     df = df.dropna(subset=[constants.LAT_LONG_COLUMN])  # No lat long values.
     df = df[df[constants.RESPONSE_TYPE_COLUMN] != constants.RESPONSE_REJECT]  # No survey previews.
-    df = df[~mask_consent_reject]  # '~' is the logical NOT bitwise operator in this context. Always need consent.
+    df = df[~mask_consent_reject]  # '~' is the NOT bitwise operator in this context.
 
-    # Check if master.csv exists ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    if os.path.isfile(constants.MASTER_FILE_PATH):  # Update to master.csv
-        master_df = pd.read_csv(constants.MASTER_FILE_PATH)
-        last_sort_id = master_df[constants.SORT_ID_COLUMN].iloc[-1]
-        rows_to_drop = df.shape[0] - master_df.shape[0]
-
-        df = df.iloc[rows_to_drop:]
-        df.insert(0, constants.SORT_ID_COLUMN, np.arange(int(last_sort_id) + 1, int(last_sort_id) + 1 + len(df)),
-                  allow_duplicates=False)
-    else:  # Init master.csv
-        # Create a 'sort ID' column for the df
-        df.insert(0, constants.SORT_ID_COLUMN, np.arange(1, len(df) + 1), allow_duplicates=False)
+    # Determining time data ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     # Convert our date column that is currently strings to datetime objects for comparisons
     df[constants.DATE_COLUMN] = pd.to_datetime(df[constants.DATE_COLUMN], format='mixed', errors='coerce')
@@ -143,31 +130,54 @@ def main():
     df[constants.DATE_COLUMN].fillna(constants.UNSPECIFIED, inplace=True)
     df[constants.OBSERVATION_TIME_COLUMN].fillna(constants.UNSPECIFIED, inplace=True)
 
+    # Create Sort ID column ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    df.insert(0, constants.SORT_ID_COLUMN, np.arange(1, len(df) + 1), allow_duplicates=False)
+
     # Make Qualtrics Reference csv ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    qr_df = copy.deepcopy(df)
     qr_columns_to_drop = [name for name in df.columns if name not in constants.QR_ORDER]
-    qr_df = df.drop(columns=qr_columns_to_drop).reindex(columns=constants.QR_ORDER)
+    qr_df = qr_df.drop(columns=qr_columns_to_drop).reindex(columns=constants.QR_ORDER)
 
-    if os.path.isfile(constants.QR_FILE_PATH):
-        # Delete headers before adding with previous csv
-        qr_df = pd.concat([pd.read_csv(constants.QR_FILE_PATH), qr_df], ignore_index=True)
-
-    qr_df.to_csv('qualtrics_ref.csv', index=False)
-
-    # Export Master.csv ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Edit column names and order ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     master_columns_to_drop = [name for name in df.columns if name not in constants.MASTER_ORDER]
-
     df = df.drop(columns=master_columns_to_drop) \
         .reindex(columns=constants.MASTER_ORDER) \
         .rename(columns=constants.MASTER_COLUMNS)
 
-    if os.path.isfile(constants.MASTER_FILE_PATH):
-        master_df = pd.concat([pd.read_csv(constants.MASTER_FILE_PATH), df], ignore_index=True)
-        master_df.to_csv('master.csv', index=False)
-    else:
-        # Export the updated dataframe to a new CSV file
+    master_checksum = df.shape[0]
+
+    # Check sum ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    # Verify that the sum of master and rejected checksums is equal to raw checksum
+
+    # raw_checksum - 1 for the intentionally removed qualtrics headers
+    if (master_checksum + rejected_checksum) == raw_checksum - 1:
+        print("Checksums match. Rows add up correctly.")
+
         df.to_csv('master.csv', index=False)
+        qr_df.to_csv('qualtrics_ref.csv', index=False)
+        rejected.to_csv('rejected.csv', index=False)
+        raw_df.to_csv('raw.csv', index=False)
+    else:
+        print("Checksums do not match. Rows do not add up correctly.")
+        print(f"master_checksum: {master_checksum}")
+        print(f"rejected_checksum: {rejected_checksum}")
+        print(f"master_checksum + rejected_checksum: {master_checksum + rejected_checksum}")
+        print(f"raw_checksum: {raw_checksum}")
+
+        # Find the missing row(s)
+        missing_rows = []
+        for index, row in raw_df.iterrows():
+            if index not in df.index and index not in rejected.index:
+                missing_rows.append(row)
+
+        if len(missing_rows) > 0:
+            print("The missing rows are:")
+            for missing_row in missing_rows:
+                print(missing_row)
 
 
 if __name__ == "__main__":
