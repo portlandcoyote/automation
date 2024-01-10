@@ -75,7 +75,7 @@ chmod +x get_coyote_data.sh
 
 ## Updating the repository
 
-In the project directory in your terminal, first check if the current status of the git repository by typing:
+In the project directory in your terminal, first check the current status of the git repository by typing:
 ```bash
 git status
 ```
@@ -102,6 +102,8 @@ Open your terminal and navigate to the project directory, doing so may look some
 cd Documents/coyotes/automation
 ```
 
+## Running the Bash command to format qualtrics form data
+
 Download the observation form results from qualtrics as a csv. 
 Save the csv in whatever way you want, as long as it is in the current directory.
 An example could be:
@@ -112,23 +114,26 @@ The csv file can also be named whatever you like.
 For example:
 > automation/data_pulls/2023/fall/november_24.csv
 
-Now without leaving the automation directory, type in the terminal this command:
+Without leaving the automation directory, type in the terminal this command:
 ```bash
 ./get_coyote_data.sh [path_to_file]
 ```
 
-Note:
-Do not literally type path_to_file, type in the relative file path to the newly saved csv. 
+>***NOTE:***
+Do not literally type path_to_file. type in the relative file path to the newly saved csv. 
 So if it was saved like the example above the command would be:
-```bash
-./get_coyote_data.sh ./data_pulls/2023/fall/november_24.csv
-```
+>```bash
+>./get_coyote_data.sh ./data_pulls/2023/fall/november_24.csv
+>```
 
-You should now have in the current directory a:
-master.csv
-rejected.csv
-ago.csv
-qualtrics_ref.csv
+
+
+You should now have in the current directory:
+- master.csv
+- rejected.csv
+- arc_gis_online.csv
+- qualtrics_ref.csv
+- raw.csv
 
 Done!
 
