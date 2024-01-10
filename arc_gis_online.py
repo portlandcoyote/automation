@@ -1,8 +1,5 @@
 import pandas as pd
-import os
 from datetime import datetime, timedelta
-
-import constants
 
 RECORDED_DATE_COLUMN = 'Recorded Date'
 TWO_WEEKS_AGO = datetime.today() - timedelta(days=14)
@@ -32,14 +29,6 @@ def main():
     df = df.drop(columns=columns_to_drop)
     df = df.reindex(columns=desired_order)
 
-    if os.path.isfile(constants.AGO_FILE_PATH):
-        df = pd.concat([pd.read_csv(constants.AGO_FILE_PATH), df], ignore_index=True)
-        df.to_csv('arc_gis_online.csv', index=False)
-    else:
-        # Export the updated dataframe to a new CSV file
-        df.to_csv('arc_gis_online.csv', index=False)
-
-    df = df.sort_values(by='Date of observation', ascending=True)
     df.to_csv('arc_gis_online.csv', index=False)
 
 
