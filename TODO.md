@@ -1,6 +1,6 @@
 # TODO 
 
-1) Different years for agol csv. file tree for each year. Zuriel's description: AGOL .csvs by year (from Observation date/Enter a date) E.g., One file for each year in dataset + unspecified (e.g., 2022.csv, 2023.csv, Unspecified.csv)
+1) Different years for agol csv. file tree for each year. Zuriel's description: AGOL .csvs by year (from Observation date/Enter a date) One file for each year in dataset + unspecified (e.g., 2022.csv, 2023.csv, Unspecified.csv)
 2) Add crosscheck to script: master+rejected should equal raw (input version, not copy just in case?)
 3) For Sheets to ARCGIS: Upload a csv directly to AGOL in bash shell
 4) Exact copy of raw data included in the output files
