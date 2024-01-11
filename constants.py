@@ -30,6 +30,8 @@ MASTER_ORDER = [
     'Q19',
     'Q19.1',
     'time_code',
+    'observation_month',
+    'observation_year',
     'latitude',
     'longitude',
     'sunrise',
@@ -73,7 +75,8 @@ MASTER_ORDER = [
 
 MASTER_COLUMNS = {
     'RecordedDate': 'Recorded Date', 'Q19': 'Date of observation', 'Q19.1': 'Time of observation',
-    'time_code': 'Time Code', 'latitude': 'Latitude', 'longitude': 'Longitude',
+    'time_code': 'Time Code', 'observation_month': 'Observation Month', 'observation_year': 'Observation Year',
+    'latitude': 'Latitude', 'longitude': 'Longitude',
     'Q7_1': 'What was the coyote doing? - Moving slowly', 'Q7_2': 'What was the coyote doing? - Moving quickly',
     'Q7_3': 'What was the coyote doing? - Mostly stationary', 'Q7_4': 'What was the coyote doing? - Vocalizing',
     'Q7_5': 'What was the coyote doing? - Hunting', 'Q7_6': 'What was the coyote doing? - Other',
