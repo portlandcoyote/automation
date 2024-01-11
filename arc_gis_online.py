@@ -31,7 +31,16 @@ def main():
     df = df.drop(columns=columns_to_drop)
     df = df.reindex(columns=desired_order)
 
-    df.to_csv('arc_gis_online.csv', index=False)
+    unique_years = df['Observation Year'].unique()
+
+    # Create a CSV file for each unique year
+    for year in unique_years:
+        # Filter the DataFrame for the current year
+        year_df = df[df['Observation Year'] == year]
+
+        # Save the filtered DataFrame as a CSV file
+        year_csv_filename = f'{year}.csv'
+        year_df.to_csv(year_csv_filename, index=False)
 
 
 if __name__ == "__main__":
