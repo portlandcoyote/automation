@@ -15,6 +15,8 @@ def main():
         'MAP ID',
         'Date of observation',
         'Time of observation',
+        'Observation Month',
+        'Observation Year',
         'Time Code',
         'Latitude',
         'Longitude'
