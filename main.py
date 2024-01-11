@@ -53,7 +53,7 @@ def main():
     # Rejected.csv ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     # Create masks to use to filter rows that should be rejected:
-    mask_lat_long_reject = pd.isna(df[constants.LAT_LONG_COLUMN]) | (df[constants.LAT_LONG_COLUMN] == '')  # No lat long.
+    mask_lat_long_reject = pd.isna(df[constants.LAT_LONG_COLUMN]) | (df[constants.LAT_LONG_COLUMN] == '')  # No lat long
     mask_response_type_reject = df[constants.RESPONSE_TYPE_COLUMN] == constants.RESPONSE_REJECT  # No survey previews.
     mask_consent_reject = df[constants.CONSENT_COLUMN].str.contains(r'\bnot\b', case=False)
 
@@ -80,7 +80,7 @@ def main():
     # Create two new columns, extracting the values from the regular expression result from the lat and long column
     df[['latitude', 'longitude']] = lat_and_long.str.extract(constants.LAT_LONG_REGEX, expand=True)
     # Create three new columns, sunrise, sunset, and time code.
-    df = df.assign(sunrise='', sunset='', time_code='')
+    df = df.assign(sunrise='', sunset='', time_code='', obersvation_month='', obersvation_year='')
 
     # calc each sunrise and sunset and fill in each row
     for index, row in df.iterrows():
@@ -90,6 +90,23 @@ def main():
         observation_time = row[constants.OBSERVATION_TIME_COLUMN]
         observation = None
         time_zone = pytz.timezone('America/Los_Angeles')
+
+        if pd.notna(observation_date):
+            if 2010 <= observation_date.year <= datetime.now().year:
+                observation_year = str(observation_date.year)
+            else:  # Handle invalid year
+                observation_year = constants.UNSPECIFIED
+
+            if 1 <= observation_date.month <= 12:
+                observation_month = str(observation_date.month)
+            else:  # Handle invalid month
+                observation_month = constants.UNSPECIFIED
+        else:  # Handle NaN or None value in observation_date
+            observation_year = constants.UNSPECIFIED
+            observation_month = constants.UNSPECIFIED
+
+        df.loc[index, 'observation_year'] = observation_year
+        df.loc[index, 'observation_month'] = observation_month
 
         if pd.notna(observation_date) and pd.notna(observation_time):
             # Get our date back into a string to compare sunsets and sunrises
