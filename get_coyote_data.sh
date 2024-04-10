@@ -21,15 +21,24 @@ source "$VENV_DIR/bin/activate"
 
 # Check if requirements are installed
 if [ -f "$REQUIREMENTS" ]; then
-    # Check if requirements are already satisfied
-    python3 -m pip freeze > installed.txt
+    UPDATE_REQUIRED=0
 
-    if diff -q "$REQUIREMENTS" installed.txt > /dev/null; then
-      python3 -m pip install --upgrade pip  # Ensure pip is up-to-date
-      echo "Installing required Python packages..."
-      python3 -m pip install -r "$REQUIREMENTS"
+    while IFS= read -r line; do
+        PACKAGE=$(echo "$line" | cut -d "=" -f 1)
+        VERSION=$(echo "$line" | cut -d "=" -f 3)
+        INSTALLED_VERSION=$(python3 -m pip show "$PACKAGE" | grep "Version:" | cut -d " " -f 2)
+
+        if [ "$VERSION" != "$INSTALLED_VERSION" ]; then
+            UPDATE_REQUIRED=1
+            break
+        fi
+    done < "$REQUIREMENTS"
+
+    if [ "$UPDATE_REQUIRED" -eq 1 ]; then
+        echo "Installing or updating required Python packages..."
+        python3 -m pip install --upgrade pip  # Ensure pip is up-to-date
+        python3 -m pip install -r "$REQUIREMENTS"
     fi
-    rm installed.txt
 else
     echo "No requirements.txt file found."
 fi
