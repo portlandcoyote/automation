@@ -3,6 +3,7 @@
 # Name of the virtual environment directory
 VENV_DIR="venv"
 ERROR_LOG="error_log.txt"
+REQUIREMENTS="requirements.txt"
 
 # Function to log errors
 log_error() {
@@ -19,7 +20,6 @@ fi
 source "$VENV_DIR/bin/activate"
 
 # Check if requirements are installed
-REQUIREMENTS="requirements.txt"
 if [ -f "$REQUIREMENTS" ]; then
     # Check if requirements are already satisfied
     python3 -m pip freeze > installed.txt
