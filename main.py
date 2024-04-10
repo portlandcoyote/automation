@@ -110,19 +110,23 @@ def main():
 
         if pd.notna(observation_date) and pd.notna(observation_time):
             # Get our date back into a string to compare sunsets and sunrises
-            observation_date = observation_date.strftime('%Y-%m-%d')
+            observation_date_str = observation_date.strftime('%Y-%m-%d')
             # Split the observation_time to keep only hours and minutes
-            observation_time = observation_time.split(':')[0] + ':' + observation_time.split(':')[1]
-            # Combine the date and time to create the final datetime string
-            date_time_str = f'{observation_date} {observation_time}'
+            observation_time_str_list = observation_time.split(':')
+            observation_time_hour = observation_time_str_list[0]
+            observation_time_minute = observation_time_str_list[1]
+            observation_time_str = observation_time_hour + ':' + observation_time_minute
 
+            # Combine the date and time to create the final datetime string
+            date_time_str = f'{observation_date_str} {observation_time_str}'
             # Did I say a string? I meant right back into a datetime object
             try:
                 combined_date_time = datetime.strptime(date_time_str, '%Y-%m-%d %H:%M')
                 observation = time_zone.localize(combined_date_time)  # Localized to compare datetime objects
             except ValueError:
                 # Handle the case where date_time_str is not in the expected format
-                print(f"Error: Invalid date_time_str format for row with date: {date_time_str}")
+                print(f"Row with observed date {observation_date_str} and observed time {observation_time_str}"
+                      f" is getting an unspecified time code because it is not in a proper format.")
 
         if not observation:
             df.loc[index, 'time_code'] = constants.UNSPECIFIED
