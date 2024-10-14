@@ -13,7 +13,7 @@ log_error() {
 # Check if the virtual environment directory exists
 if [ ! -d "$VENV_DIR" ]; then
     echo "Virtual environment not found. Creating one now..."
-    python3 -m venv "$VENV_DIR"
+    python3.9 -m venv "$VENV_DIR"
 fi
 
 # Activate the virtual environment
