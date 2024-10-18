@@ -77,12 +77,14 @@ def main():
 
     # Grab the lat/lng values from the column
     lat_and_long = df[constants.LAT_LONG_COLUMN]
+
     # Create two new columns, extracting the values from the regular expression result from the lat and long column
     df[['latitude', 'longitude']] = lat_and_long.str.extract(constants.LAT_LONG_REGEX, expand=True)
-    # Create three new columns, sunrise, sunset, and time code.
+
+    # Create five new columns to use for time code results
     df = df.assign(sunrise='', sunset='', time_code='', obersvation_month='', obersvation_year='')
 
-    # calc each sunrise and sunset and fill in each row
+    # Calculate each sunrise and sunset and fill in each row
     for index, row in df.iterrows():
         latitude = row['latitude']
         longitude = row['longitude']

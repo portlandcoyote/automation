@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 
-LAT_LONG_COLUMN = 'Q26'
-OBSERVATION_TIME_COLUMN = 'Q19.1'
+LAT_LONG_COLUMN = 'Location with Coordi'
+OBSERVATION_TIME_COLUMN = 'Time Entry'
 RECORDED_DATE_COLUMN = 'RecordedDate'
-DATE_COLUMN = 'Q19'
+DATE_COLUMN = 'Date Entry'
 RESPONSE_TYPE_COLUMN = 'Status'
 CONSENT_COLUMN = 'Q21'
 SORT_ID_COLUMN = 'Sort ID'
