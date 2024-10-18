@@ -27,8 +27,8 @@ QR_ORDER = [
 MASTER_ORDER = [
     'Sort ID',
     'RecordedDate',
-    'Q19',
-    'Q19.1',
+    'Date Entry',
+    'Time Entry',
     'time_code',
     'observation_month',
     'observation_year',
@@ -74,7 +74,7 @@ MASTER_ORDER = [
 ]
 
 MASTER_COLUMNS = {
-    'RecordedDate': 'Recorded Date', 'Q19': 'Date of observation', 'Q19.1': 'Time of observation',
+    'RecordedDate': 'Recorded Date', 'Date Entry': 'Date of observation', 'Time Entry': 'Time of observation',
     'time_code': 'Time Code', 'observation_month': 'Observation Month', 'observation_year': 'Observation Year',
     'latitude': 'Latitude', 'longitude': 'Longitude',
     'Q7_1': 'What was the coyote doing? - Moving slowly', 'Q7_2': 'What was the coyote doing? - Moving quickly',
